@@ -42,10 +42,10 @@ def draw_landmarks(detection_results, image):
 
 
 connections = [(0, 1), (1, 2), (2, 3), (3, 4),  # Thumb
-               (0, 5), (5, 6), (6, 7), (7, 8),  # Index finger
-               (0, 9), (9, 10), (10, 11), (11, 12),  # Middle finger
-               (0, 13), (13, 14), (14, 15), (15, 16),  # Ring finger
-               (0, 17), (17, 18), (18, 19), (19, 20)]  # Pinky
+               (2, 5), (5, 6), (6, 7), (7, 8),  # Index finger
+               (5, 9), (9, 10), (10, 11), (11, 12),  # Middle finger
+               (9, 13), (13, 14), (14, 15), (15, 16),  # Ring finger
+               (13, 17), (17, 18), (18, 19), (19, 20), (17, 0)]  # Pinky
 
 def find_center_of_hand(hand_landmarks):
     x_vals = [landmark.x for landmark in hand_landmarks.landmark]
