@@ -123,7 +123,7 @@ def main():
             plt.draw()
             plt.pause(0.01)  # Add a short pause to allow the plot to update
 
-            img = draw_landmarks(results, img)
+            # img = draw_landmarks(results, img)
 
         cv.imshow("image", img)
 
