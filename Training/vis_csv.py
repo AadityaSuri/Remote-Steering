@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read the csv file
-df = pd.read_csv('idle_coordinates.csv', dtype=np.float32)
+df = pd.read_csv('Data/idle_coordinates.csv', dtype=np.float32)
 print(df)
 
 plt.ion()
