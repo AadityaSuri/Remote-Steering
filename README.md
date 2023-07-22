@@ -1,3 +1,3 @@
 # Remote-Steering
 
-![:)))](hands_graph.png)
+![:)))](hands.gif)
