@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read the csv file
-df = pd.read_csv('steering_coordinates.csv', dtype=np.float32)
+df = pd.read_csv('idle_coordinates.csv', dtype=np.float32)
 print(df)
 
 plt.ion()
@@ -48,7 +48,7 @@ for (i1, row1), (i2, row2) in zip(iter, iter):
                 [z_vals_R[connection[0]], z_vals_R[connection[1]]], 'r')
 
     plt.draw()
-    plt.pause(0.01)
+    plt.pause(0.005)
 
     ax.clear()
     ax.set_xlim([0, 1])
