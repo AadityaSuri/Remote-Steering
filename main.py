@@ -7,12 +7,10 @@ def scale_relative(results):
     for hand_landmarks in results.multi_hand_landmarks:
         x_wrist = hand_landmarks.landmark[0].x
         y_wrist = hand_landmarks.landmark[0].y
-        z_wrist = hand_landmarks.landmark[0].z
 
         for landmark in hand_landmarks.landmark:
             landmark.x -= x_wrist
             landmark.y -= y_wrist
-            landmark.z -= z_wrist
 
     return results
 
@@ -32,7 +30,7 @@ def predict_gesture(model, results):
     tensor_results = torch.tensor(flattened_results)
     tensor_results = tensor_results.unsqueeze(0)
     # tensor_results = tensor_results.unsqueeze(0)
-    # tensor_results = tensor_results.float()
+    tensor_results = tensor_results.float()
 
     output = model(tensor_results)
     _, predicted = torch.max(output.data, 1)
