@@ -3,31 +3,22 @@ import mediapipe as mp
 import torch
 import cv2 as cv
 
-def scale_relative(results):
+
+def flatten_scale_relative(results):
+    flattened_scaled_results = []
     for hand_landmarks in results.multi_hand_landmarks:
         x_wrist = hand_landmarks.landmark[0].x
         y_wrist = hand_landmarks.landmark[0].y
 
         for landmark in hand_landmarks.landmark:
-            landmark.x -= x_wrist
-            landmark.y -= y_wrist
+            flattened_scaled_results.append(landmark.x - x_wrist)
+            flattened_scaled_results.append(landmark.y - y_wrist)
+            flattened_scaled_results.append(landmark.z)
 
-    return results
-
-def flatten_results(results):
-    flattened_results = []
-    for hand_landmarks in results.multi_hand_landmarks:
-        for landmark in hand_landmarks.landmark:
-            flattened_results.append(landmark.x)
-            flattened_results.append(landmark.y)
-            flattened_results.append(landmark.z)
-
-    return flattened_results
+    return flattened_scaled_results
 
 def predict_gesture(model, results):
-    results = scale_relative(results)
-    flattened_results = flatten_results(results)
-    tensor_results = torch.tensor(flattened_results)
+    tensor_results = torch.tensor(flatten_scale_relative(results))
     tensor_results = tensor_results.unsqueeze(0)
     # tensor_results = tensor_results.unsqueeze(0)
     tensor_results = tensor_results.float()
