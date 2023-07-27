@@ -33,7 +33,7 @@ def main():
                                      min_tracking_confidence=0.5)
 
     cap = cv.VideoCapture(0)
-    model = GestureFNN(input_dim=126, hidden_dim_1=100, hidden_dim_2=64, output_dim=3)
+    model = GestureFNN(input_dim=126, hidden_dim_1=96, hidden_dim_2=32, output_dim=2)
     model.load_state_dict(torch.load('Training/Model/model.pth'))
     model.eval()
 
