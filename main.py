@@ -24,7 +24,6 @@ def predict_gesture(model, results):
     softmax_output = torch.nn.functional.softmax(output, dim=1)
     _, predicted = torch.max(output.data, 1)
     predicted = predicted.item()
-    # print(predicted.item())
 
     if predicted == 0 or predicted == 1:
         if softmax_output[0][predicted] < 0.9:
