@@ -10,29 +10,17 @@ class GestureClassifier:
         self.model.eval()
         self.mediapipe_hands = mediapipe_hands
 
+
     def flatten_scale_relative(self, results):
-        flattened_scaled_results = []
-        for hand_landmarks in results.multi_hand_landmarks:
-            x_wrist = hand_landmarks.landmark[0].x
-            y_wrist = hand_landmarks.landmark[0].y
-
-            for landmark in hand_landmarks.landmark:
-                flattened_scaled_results.append(landmark.x - x_wrist)
-                flattened_scaled_results.append(landmark.y - y_wrist)
-                flattened_scaled_results.append(landmark.z)
-
-        return flattened_scaled_results
+        return np.array([(landmark.x - hand_landmarks.landmark[0].x,
+                          landmark.y - hand_landmarks.landmark[0].y,
+                          landmark.z) for hand_landmarks in results.multi_hand_landmarks
+                         for landmark in hand_landmarks.landmark]).flatten()
 
     def find_center_of_hand(self, hand_landmarks):
-        x_vals = [landmark.x for landmark in hand_landmarks.landmark]
-        y_vals = [landmark.y for landmark in hand_landmarks.landmark]
-        z_vals = [landmark.z for landmark in hand_landmarks.landmark]
-
-        x_center = sum(x_vals) / len(x_vals)
-        y_center = sum(y_vals) / len(y_vals)
-        z_center = sum(z_vals) / len(z_vals)
-
-        return x_center, y_center, z_center
+        landmarks_array = np.array([(landmark.x, landmark.y, landmark.z)
+                                    for landmark in hand_landmarks.landmark])
+        return landmarks_array.mean(axis=0)
 
     def calculate_angle(self, L_coordinates, R_coordinates):
         x1, y1, z1 = L_coordinates
