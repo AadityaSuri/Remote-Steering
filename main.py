@@ -25,7 +25,7 @@ def predict_gesture(model, results):
 
     output = model(tensor_results)
     _, predicted = torch.max(output.data, 1)
-    return predicted
+    return predicted.item()
 
 def main():
     print("Starting...")
