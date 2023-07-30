@@ -13,19 +13,21 @@ def flatten_scale_relative(results):
         for landmark in hand_landmarks.landmark:
             flattened_scaled_results.append(landmark.x - x_wrist)
             flattened_scaled_results.append(landmark.y - y_wrist)
-            flattened_scaled_results.append(landmark.z)
+            # flattened_scaled_results.append(landmark.z)
 
     return flattened_scaled_results
 
-def predict_gesture(model, results):
+def predict_gesture_softmax(model, results):
     tensor_results = torch.tensor(flatten_scale_relative(results))
-    tensor_results = tensor_results.unsqueeze(0)
+    print(tensor_results.shape)
+    # tensor_results = tensor_results.unsqueeze(0)
     # tensor_results = tensor_results.unsqueeze(0)
     tensor_results = tensor_results.float()
-
     output = model(tensor_results)
-    _, predicted = torch.max(output.data, 1)
-    return predicted
+    softmax = torch.nn.functional.softmax(output, dim=0)
+    print(softmax)
+    return torch.argmax(softmax).item()
+
 
 def main():
     print("Starting...")
@@ -33,7 +35,7 @@ def main():
                                      min_tracking_confidence=0.5)
 
     cap = cv.VideoCapture(0)
-    model = GestureFNN(input_dim=126, hidden_dim_1=96, hidden_dim_2=32, output_dim=2)
+    model = GestureFNN()
     model.load_state_dict(torch.load('Training/Model/model.pth'))
     model.eval()
 
@@ -50,7 +52,7 @@ def main():
 
         if results.multi_hand_landmarks:
             if len(results.multi_hand_landmarks) == 2:
-                predicted = predict_gesture(model, results)
+                predicted = predict_gesture_softmax(model, results)
                 print(predicted)
                 cv.putText(img, str(predicted), (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 
