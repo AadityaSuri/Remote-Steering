@@ -4,25 +4,25 @@ import cv2 as cv
 
 
 class GestureClassifier:
-    def __init__(self, model, weights_path, mediapipe_hands):
+    def __init__(self, model: torch.nn.Module, weights_path: str, mediapipe_hands: object) -> None:
         self.model = model
         self.model.load_state_dict(torch.load(weights_path))
         self.model.eval()
         self.mediapipe_hands = mediapipe_hands
 
 
-    def flatten_scale_relative(self, results):
+    def flatten_scale_relative(self, results: object) -> np.ndarray:
         return np.array([(landmark.x - hand_landmarks.landmark[0].x,
                           landmark.y - hand_landmarks.landmark[0].y,
                           landmark.z) for hand_landmarks in results.multi_hand_landmarks
                          for landmark in hand_landmarks.landmark]).flatten()
 
-    def find_center_of_hand(self, hand_landmarks):
+    def find_center_of_hand(self, hand_landmarks: object) -> np.ndarray:
         landmarks_array = np.array([(landmark.x, landmark.y, landmark.z)
                                     for landmark in hand_landmarks.landmark])
         return landmarks_array.mean(axis=0)
 
-    def calculate_angle(self, L_coordinates, R_coordinates):
+    def calculate_angle(self, L_coordinates: tuple, R_coordinates: tuple) -> float:
         x1, y1, z1 = L_coordinates
         x2, y2, z2 = R_coordinates
 
@@ -45,7 +45,7 @@ class GestureClassifier:
 
         return round(theta_degrees, 2)
 
-    def predict_gesture(self, results):
+    def predict_gesture(self, results: object) -> int:
         tensor_results = torch.tensor(self.flatten_scale_relative(results)).unsqueeze(0).float()
 
         output = self.model(tensor_results)
@@ -59,7 +59,7 @@ class GestureClassifier:
 
         return predicted
 
-    def draw_prediction(self, img):
+    def draw_prediction(self, img: np.ndarray) -> np.ndarray:
         results = self.mediapipe_hands.process(cv.cvtColor(img, cv.COLOR_BGR2RGB))
 
         if results.multi_hand_landmarks:
