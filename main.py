@@ -18,14 +18,11 @@ def flatten_scale_relative(results):
     return flattened_scaled_results
 
 def predict_gesture(model, results):
-    tensor_results = torch.tensor(flatten_scale_relative(results))
-    tensor_results = tensor_results.unsqueeze(0)
-    # tensor_results = tensor_results.unsqueeze(0)
-    tensor_results = tensor_results.float()
+    tensor_results = torch.tensor(flatten_scale_relative(results)).unsqueeze(0).float()
 
     output = model(tensor_results)
     _, predicted = torch.max(output.data, 1)
-    return predicted
+    return predicted.item()
 
 def main():
     print("Starting...")
@@ -33,7 +30,7 @@ def main():
                                      min_tracking_confidence=0.5)
 
     cap = cv.VideoCapture(0)
-    model = GestureFNN(input_dim=126, hidden_dim_1=96, hidden_dim_2=32, output_dim=2)
+    model = GestureFNN(input_dim=126, hidden_dim_1=100, hidden_dim_2=64, output_dim=3)
     model.load_state_dict(torch.load('Training/Model/model.pth'))
     model.eval()
 
