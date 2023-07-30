@@ -18,10 +18,7 @@ def flatten_scale_relative(results):
     return flattened_scaled_results
 
 def predict_gesture(model, results):
-    tensor_results = torch.tensor(flatten_scale_relative(results))
-    tensor_results = tensor_results.unsqueeze(0)
-    # tensor_results = tensor_results.unsqueeze(0)
-    tensor_results = tensor_results.float()
+    tensor_results = torch.tensor(flatten_scale_relative(results)).unsqueeze(0).float()
 
     output = model(tensor_results)
     _, predicted = torch.max(output.data, 1)
