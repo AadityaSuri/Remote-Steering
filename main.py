@@ -21,8 +21,16 @@ def predict_gesture(model, results):
     tensor_results = torch.tensor(flatten_scale_relative(results)).unsqueeze(0).float()
 
     output = model(tensor_results)
+    softmax_output = torch.nn.functional.softmax(output, dim=1)
     _, predicted = torch.max(output.data, 1)
-    return predicted.item()
+    predicted = predicted.item()
+    # print(predicted.item())
+
+    if predicted == 0 or predicted == 1:
+        if softmax_output[0][predicted] < 0.9:
+            predicted = 2
+
+    return predicted
 
 def main():
     print("Starting...")
@@ -31,7 +39,7 @@ def main():
 
     cap = cv.VideoCapture(0)
     model = GestureFNN(input_dim=126, hidden_dim_1=100, hidden_dim_2=64, output_dim=3)
-    model.load_state_dict(torch.load('Training/Model/model.pth'))
+    model.load_state_dict(torch.load('Training/Gesture_detection/Model/model.pth'))
     model.eval()
 
     print("Camera started...")
